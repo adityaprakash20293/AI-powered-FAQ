@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NovaTrack Technical Knowledge Hub</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f7fa;color:#30465a;font-family:Arial,sans-serif}
+button,input{font:inherit}
+.shell{max-width:1080px;margin:0 auto;background:#fff;min-height:100vh}
+.header{background:#102b45;color:white;padding:28px 30px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#7bd2cb;font-weight:bold}
+.header h1{font-size:27px;margin:10px 0}
+.header p{margin:0;color:#d6e2ec;line-height:1.6;max-width:760px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.tags span{font-size:11px;border:1px solid #557086;border-radius:20px;padding:6px 10px;color:#e4edf4}
+.main{padding:25px 30px 30px}
+.search-panel{background:#f2f7fa;border:1px solid #e2ebf0;border-radius:12px;padding:20px}
+.search-panel h2{margin:0 0 7px;color:#102b45;font-size:19px}
+.search-panel p{margin:0 0 15px;color:#687c8d;font-size:13px;line-height:1.5}
+.search-row{display:flex;gap:9px}
+.search-row input{flex:1;min-width:0;border:1px solid #cbd9e2;border-radius:7px;padding:13px 14px;background:#fff;color:#263f54;outline:none}
+.search-row input:focus{border-color:#168f91;box-shadow:0 0 0 2px #168f9122}
+.btn{background:#168f91;border:0;border-radius:7px;color:#fff;font-weight:bold;padding:12px 17px;cursor:pointer}
+.btn:hover{background:#087f82}
+.suggestions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.suggestions button{border:1px solid #d5e1e8;border-radius:20px;background:#fff;padding:6px 10px;color:#53697b;font-size:11px;cursor:pointer}
+.layout{display:grid;grid-template-columns:205px 1fr;gap:22px;margin-top:25px}
+.sidebar h3{font-size:13px;color:#102b45;margin:2px 0 12px}
+.category{display:block;width:100%;text-align:left;border:0;background:transparent;padding:11px 12px;border-radius:7px;color:#5b7082;cursor:pointer;font-size:13px;margin:3px 0}
+.category.active{background:#e6f4f2;color:#087f82;font-weight:bold}
+.category:hover{background:#f0f6f7}
+.side-note{margin-top:18px;background:#f3f7fa;border-radius:8px;padding:12px;color:#718394;font-size:11px;line-height:1.55}
+.results-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}
+.results-head h2{font-size:18px;color:#102b45;margin:0}
+.count{font-size:11px;color:#758797}
+.article{border:1px solid #e0e8ed;border-radius:9px;margin-bottom:10px;overflow:hidden}
+.article-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 16px;cursor:pointer}
+.article-top h3{font-size:14px;color:#29465d;margin:0;line-height:1.45}
+.article-top small{display:block;color:#168f91;font-size:10px;margin-bottom:5px;text-transform:uppercase;letter-spacing:.6px;font-weight:bold}
+.chevron{color:#168f91;font-size:19px;flex-shrink:0;transition:transform .2s}
+.article.open .chevron{transform:rotate(180deg)}
+.article-body{display:none;padding:0 16px 16px;border-top:1px solid #edf1f3}
+.article.open .article-body{display:block}
+.article-body p{font-size:13px;line-height:1.65;color:#566c7e;margin:13px 0}
+.answer-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:#168f91;font-weight:bold;margin-top:14px}
+.article-body ul{padding-left:19px;margin:8px 0}
+.article-body li{font-size:13px;line-height:1.55;margin:6px 0;color:#566c7e}
+.feedback{border-top:1px solid #edf1f3;margin-top:14px;padding-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.feedback span{font-size:11px;color:#7a8b99;margin-right:3px}
+.feedback button{border:1px solid #dce5ea;background:#fff;color:#566c7e;border-radius:6px;padding:7px 10px;font-size:11px;cursor:pointer}
+.feedback button:hover{border-color:#168f91;color:#087f82}
+.feedback button.selected{background:#e6f4f2;border-color:#168f91;color:#087f82}
+.no-results{background:#f5f8fa;border-radius:9px;padding:24px;text-align:center;color:#687c8d;font-size:13px;line-height:1.6}
+.no-results strong{display:block;color:#29465d;margin-bottom:5px}
+.bottom-note{margin-top:22px;background:#eaf6f5;border-left:4px solid #168f91;border-radius:5px;padding:13px 15px;font-size:12px;line-height:1.6;color:#46656a}
+.footer{background:#f3f7fa;padding:15px 30px;color:#788896;font-size:11px;line-height:1.6}
+@media(max-width:680px){
+.header{padding:23px 18px}.header h1{font-size:23px}
+.main{padding:18px 16px 24px}
+.search-row{flex-direction:column}
+.search-row .btn{width:100%}
+.layout{grid-template-columns:1fr;gap:15px}
+.sidebar{border:1px solid #e2ebf0;border-radius:9px;padding:13px}
+.sidebar h3{margin-bottom:7px}
+.category-list{display:flex;gap:6px;flex-wrap:wrap}
+.category{width:auto;padding:8px 10px;margin:0;font-size:11px}
+.side-note{margin-top:10px}
+.footer{padding:14px 18px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="header">
+ <div class="eyebrow">Portfolio demonstration · Knowledge management</div>
+ <h1>NovaTrack Technical Knowledge Hub</h1>
+ <p>A searchable self-service knowledge base concept that helps users find answers to common product questions, understand workflows, and access basic troubleshooting guidance.</p>
+ <div class="tags">
+  <span>Fictional technical product</span>
+  <span>Searchable FAQs</span>
+  <span>Troubleshooting resources</span>
+ </div>
+</header>
+
+<main class="main">
+ <section class="search-panel">
+  <h2>How can we help you?</h2>
+  <p>Search the knowledge hub using a question, keyword, or topic.</p>
+  <div class="search-row">
+   <input id="searchInput" type="search" placeholder="Example: Why is my dashboard not updating?" aria-label="Search knowledge articles">
+   <button class="btn" onclick="searchArticles()">Search</button>
+  </div>
+  <div class="suggestions">
+   <button onclick="quickSearch('dashboard')">Dashboard</button>
+   <button onclick="quickSearch('offline')">Connectivity</button>
+   <button onclick="quickSearch('reports')">Reports</button>
+   <button onclick="quickSearch('account')">Account access</button>
+  </div>
+ </section>
+
+ <div class="layout">
+  <aside class="sidebar">
+   <h3>Browse by category</h3>
+   <div class="category-list">
+    <button class="category active" data-category="All" onclick="setCategory('All',this)">All articles</button>
+    <button class="category" data-category="Getting Started" onclick="setCategory('Getting Started',this)">Getting Started</button>
+    <button class="category" data-category="Connectivity" onclick="setCategory('Connectivity',this)">Connectivity</button>
+    <button class="category" data-category="Dashboard" onclick="setCategory('Dashboard',this)">Dashboard</button>
+    <button class="category" data-category="Reports" onclick="setCategory('Reports',this)">Reports</button>
+   </div>
+   <div class="side-note"><strong>Knowledge hub concept</strong><br><br>Articles are grouped by topic to make common product information easier to discover and reuse.</div>
+  </aside>
+
+  <section>
+   <div class="results-head">
+    <h2 id="resultsTitle">Popular help articles</h2>
+    <span class="count" id="resultCount"></span>
+   </div>
+   <div id="articleList"></div>
+  </section>
+ </div>
+
+ <div class="bottom-note"><strong>How this supports users:</strong> A structured knowledge hub can reduce time spent searching for information, provide consistent answers to common questions, and give support teams reusable resources for customer and employee enablement.</div>
+</main>
+
+<footer class="footer">
+<strong>Portfolio demonstration notice:</strong> NovaTrack is a fictional product and all content is illustrative. This prototype uses a local sample article library and keyword search; it is not connected to a live AI model, external knowledge base, or production system.
+</footer>
+</div>
+
+<script>
+const articles=[
+{id:1,category:"Getting Started",title:"How do I access my NovaTrack account?",keywords:"login sign in access password account getting started",summary:"Use the account access page provided by your organization. Your organization's administrator manages user access.",steps:["Open the NovaTrack sign-in page supplied by your organization.","Enter your assigned account credentials.","If you cannot access your account, contact your organization's administrator or support team."]},
+{id:2,category:"Dashboard",title:"Why is my dashboard not updating?",keywords:"dashboard refresh update data metrics loading stale",summary:"A dashboard may continue to show previously loaded information if the page has not refreshed or the latest data is not yet available.",steps:["Refresh the dashboard page.","Check whether other dashboard sections are displaying current information.","If the information still appears outdated, record the affected dashboard area and contact your support team."]},
+{id:3,category:"Connectivity",title:"What should I check if the console shows offline?",keywords:"offline connectivity connection network internet console unavailable",summary:"An offline status may indicate that the application cannot currently communicate with a connected service.",steps:["Check whether your device has an active network connection.","Refresh the NovaTrack page and review the displayed status again.","If the offline status continues, note when it started and contact your support team."]},
+{id:4,category:"Reports",title:"Where can I find system reports?",keywords:"reports analytics summaries reporting download activity",summary:"The Reports area provides summaries of platform activity over a selected reporting period.",steps:["Open the Reports area from the main navigation.","Choose an available report or reporting period.","Review the displayed summary. Available report types depend on your organization's configuration."]},
+{id:5,category:"Getting Started",title:"Why can't I see a particular feature?",keywords:"feature access permission role user management visibility",summary:"Feature visibility may depend on the role or access permissions assigned to your account.",steps:["Confirm that you are signed in with the intended account.","Check with your organization's administrator whether your role includes access to the feature.","If access should be available, contact your support team and identify the feature you cannot see."]},
+{id:6,category:"Connectivity",title:"Why is data synchronization delayed?",keywords:"sync synchronization delay data update connection status",summary:"A delay may occur when updated information has not yet appeared in the platform.",steps:["Check the platform status and any displayed notifications.","Refresh the relevant page and see whether the information has updated.","If the delay continues, record the affected information and contact your support team."]}
+];
+let activeCategory="All",activeQuery="";
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function render(){
+ const q=activeQuery.toLowerCase().trim();
+ const filtered=articles.filter(a=>(activeCategory==="All"||a.category===activeCategory)&&(!q||(a.title+" "+a.keywords+" "+a.summary+" "+a.steps.join(" ")).toLowerCase().includes(q)));
+ document.getElementById("resultsTitle").textContent=q?"Search results":activeCategory==="All"?"Popular help articles":activeCategory+" articles";
+ document.getElementById("resultCount").textContent=filtered.length+" article"+(filtered.length===1?"":"s");
+ const list=document.getElementById("articleList");
+ if(!filtered.length){
+  list.innerHTML='<div class="no-results"><strong>No matching articles found</strong>Try another keyword or choose a different category.</div>';
+  return;
+ }
+ list.innerHTML=filtered.map(a=>`
+ <article class="article" id="article-${a.id}">
+  <div class="article-top" role="button" tabindex="0" aria-expanded="false" onclick="toggleArticle(${a.id},this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleArticle(${a.id},this)}">
+   <div><small>${escapeHTML(a.category)}</small><h3>${escapeHTML(a.title)}</h3></div>
+   <span class="chevron">⌄</span>
+  </div>
+  <div class="article-body">
+   <div class="answer-label">Overview</div>
+   <p>${escapeHTML(a.summary)}</p>
+   <div class="answer-label">Suggested checks</div>
+   <ul>${a.steps.map(s=>`<li>${escapeHTML(s)}</li>`).join("")}</ul>
+   <div class="feedback"><span>Was this article helpful?</span>
+    <button onclick="feedback(this,'yes')">Yes, helpful</button>
+    <button onclick="feedback(this,'no')">Needs improvement</button>
+   </div>
+  </div>
+ </article>`).join("");
+}
+function toggleArticle(id,el){
+ const article=document.getElementById("article-"+id);
+ article.classList.toggle("open");
+ el.setAttribute("aria-expanded",article.classList.contains("open")?"true":"false");
+}
+function feedback(button,type){
+ const group=button.parentElement;
+ group.querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
+ button.classList.add("selected");
+ let note=group.querySelector(".feedback-note");
+ if(!note){note=document.createElement("span");note.className="feedback-note";note.style.cssText="font-size:11px;color:#168f91";group.appendChild(note);}
+ note.textContent=type==="yes"?"Thank you for your feedback.":"Thank you. This article has been flagged for review in this demo.";
+}
+function setCategory(category,button){
+ activeCategory=category;activeQuery="";
+ document.getElementById("searchInput").value="";
+ document.querySelectorAll(".category").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ render();
+}
+function searchArticles(){
+ activeQuery=document.getElementById("searchInput").value;
+ activeCategory="All";
+ document.querySelectorAll(".category").forEach(b=>b.classList.toggle("active",b.dataset.category==="All"));
+ render();
+}
+function quickSearch(q){
+ document.getElementById("searchInput").value=q;
+ searchArticles();
+}
+document.getElementById("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchArticles();});
+render();
+</script>
+</body>
+</html>
